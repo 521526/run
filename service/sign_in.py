@@ -5,7 +5,7 @@ import requests
 import json
 import time
 import random
-import init
+from util import init
 
 # 在 centos 下解决中文不能读取错误
 # import sys

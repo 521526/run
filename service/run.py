@@ -7,7 +7,7 @@ import time
 
 from requests import RequestException
 
-import init
+from util import init
 
 # # 在 centos 下解决中文不能读取错误
 # import sys

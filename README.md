@@ -1,1 +1,11 @@
-run
+### 跑步与签到自动化脚本
+- 脚本来自于 蛋蛋超人
+- 食用方式：linux 服务器上使用crontab这个定时的东西，
+    - crontab 一般你买的云服务器上都会安装
+    - 如果没安装：安装命令` yum install crontabs`
+    - 启动crontab：`systemctl start crond`
+    - 使用crontab -e：进入编辑
+        - 格式：
+        - `*  *  *  *  *  command`
+        - `分 时 日 月 周   命令`
+        - 直接开花：
