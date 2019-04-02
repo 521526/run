@@ -36,14 +36,17 @@ def run(username, password):
     stop_latitude = round(random.uniform(39.062292, 39.06293), 6)
     stop_longitude = round(random.uniform(117.111371, 117.111913), 6)
 
+    # 根据谷歌api来获取地址
+    start_address = init.get_address(start_latitude, start_longitude)
+    stop_address = init.get_address(stop_latitude, stop_longitude)
     params1 = {
-        'address': '天津工业大学新校区',
+        'address': start_address,
         'latitude': start_latitude,
         'longitude': start_longitude,
         'status': 0
     }
     params2 = {
-        'address': '天津工业大学新校区',
+        'address': stop_address,
         'latitude': stop_latitude,
         'longitude': stop_longitude,
         'status': 1

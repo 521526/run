@@ -32,8 +32,10 @@ def sign_in(username, password):
     # 经度
     longitude = round(random.uniform(117.106303, 117.109533), 6)
 
+    # 使用谷歌api获取地址传入到请求参数
+    address = init.get_address(latitude, longitude)
     params = {
-        # 'signInLocation': '天津工业大学新校区',
+        'signInLocation': address,
         'remark': '',
         'latitude': latitude,
         'longitude': longitude,

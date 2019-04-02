@@ -58,3 +58,11 @@ def get_token(username, password):
         get_log().exception('get_token error')
     else:
         return response.json().get('access_token')
+
+
+def get_address(latitude, longitude):
+    url = 'https://restapi.amap.com/v3/geocode/regeo?key=48fec8bff8b03cd5dbec69715adec53e&location='\
+          + str(longitude) + ',' + str(latitude) + '&radius=1000&extensions=all&batch=false&roadlevel=1'
+    response = requests.get(url=url)
+    address = response.json().get("regeocode").get("formatted_address")
+    return address
