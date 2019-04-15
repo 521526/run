@@ -67,9 +67,9 @@ def sign_in(username, password):
     else:
         if (response.json().get("code") == 200) & (response.json().get("data").get("result")):
             logger.info(threading.current_thread().getName() + '签到成功！')
+            logger.info(response.json())
         else:
-            logger.info(threading.current_thread().getName() + response.json().get("data").get(
-                "reason"))
+            logger.info(threading.current_thread().getName() + response.json().get("data").get("reason"))
 
 
 if __name__ == '__main__':

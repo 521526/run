@@ -54,6 +54,7 @@ def get_token(username, password):
     # 捕获request的异常
     try:
         response = requests.post(url=url, data=params, headers=headers)
+        logging.info(response.json())
     except RequestException:
         get_log().exception('get_token error')
     else:
