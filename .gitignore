@@ -1,6 +1,5 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
 *$py.class
 
 # C extensions
@@ -59,3 +58,4 @@ target/
 # idea
 .idea
 log.txt
+venv

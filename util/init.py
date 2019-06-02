@@ -43,7 +43,7 @@ def get_token(username, password):
 
     headers = {
         'Accept-Encoding': 'gzip',
-        'User-Agent': 'okhttp/3.3.1',
+        'User-Agent': 'okhttp/3.4.2',
         'Content-Length': '117',
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': '',
@@ -62,8 +62,25 @@ def get_token(username, password):
 
 
 def get_address(latitude, longitude):
-    url = 'https://restapi.amap.com/v3/geocode/regeo?key=48fec8bff8b03cd5dbec69715adec53e&location='\
+    url = 'https://restapi.amap.com/v3/geocode/regeo?key=48fec8bff8b03cd5dbec69715adec53e&location=' \
           + str(longitude) + ',' + str(latitude) + '&radius=1000&extensions=all&batch=false&roadlevel=1'
     response = requests.get(url=url)
+    print(response.json())
     address = response.json().get("regeocode").get("formatted_address")
     return address
+
+
+def address(latitude, longitude, key):
+    """
+    使用腾讯api来获取位置
+    :param latitude:
+    :param longitude:
+    :return:
+    """
+    url = 'https://apis.map.qq.com/ws/geocoder/v1/?location={},{}&key={}'.format(latitude, longitude, key)
+    response = requests.get(url=url, verify=False)
+
+
+if __name__ == '__main__':
+    address(39.067090, 117.101323)
+    # get_address(39.067646, 117.106894)
