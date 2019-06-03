@@ -29,7 +29,7 @@ def get_log():
     return logger
 
 
-# 获取token
+# 登录获取token
 def get_token(username, password):
     url = "http://api.edudot.cn/usercenter/connect/token"
 
@@ -43,7 +43,7 @@ def get_token(username, password):
 
     headers = {
         'Accept-Encoding': 'gzip',
-        'User-Agent': 'okhttp/3.3.1',
+        'User-Agent': 'okhttp/3.4.2',
         'Content-Length': '117',
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': '',
@@ -54,16 +54,38 @@ def get_token(username, password):
     # 捕获request的异常
     try:
         response = requests.post(url=url, data=params, headers=headers)
-        logging.info(response.json())
     except RequestException:
         get_log().exception('get_token error')
     else:
         return response.json().get('access_token')
 
 
-def get_address(latitude, longitude):
-    url = 'https://restapi.amap.com/v3/geocode/regeo?key=48fec8bff8b03cd5dbec69715adec53e&location='\
-          + str(longitude) + ',' + str(latitude) + '&radius=1000&extensions=all&batch=false&roadlevel=1'
-    response = requests.get(url=url)
-    address = response.json().get("regeocode").get("formatted_address")
-    return address
+def get_location(latitude, longitude, token):
+    """
+    模拟获取地址
+    :param latitude: 维度
+    :param longitude: 经度
+    :param token: 登录的token
+    :return:
+    """
+    url = 'http://api.tjise.edudot.cn/api/v1/LateSignIn/GetLocation' \
+          '?latitude={}&longitude={}'.format(latitude, longitude)
+    headers = {
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+        'Authorization': token,
+        'Origin': 'http://clock.tjise.edudot.cn',
+        'X-Requested-With': 'XMLHttpRequest',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 7.1.2; M6 Note Build/N2G47H; wv) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 '
+                      'MQQBrowser/6.2 TBS/044704 Mobile Safari/537.36; Edudot',
+        'credentials': 'include',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Accept': '*/*',
+        'Referer': 'http://clock.tjise.edudot.cn/',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'zh-CN,en-US;q=0.9'
+    }
+    requests.get(url=url, headers=headers)
+    return headers
