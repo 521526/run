@@ -22,6 +22,15 @@
     - crontab -l 查看已经开启的任务
 - 可能出的问题
     - 时区问题
-        - 请自行百度解决
+        - openvz结构vps
+        ```
+        rm -rf /etc/localtime
+        ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+        
+        yum install -y ntp
+        ntpdate -d us.pool.ntp.org 
+        ntpdate us.pool.ntp.org 
+        date -R # 检查时间是否已经同步
+        ```
     - 死锁问题
         - 并没解决
