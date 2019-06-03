@@ -9,7 +9,7 @@ from requests import RequestException
 
 from util import init
 
-# # 在 centos 下解决中文不能读取错误
+# 在 centos 下解决中文不能读取错误
 # import sys
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
@@ -66,12 +66,12 @@ def run(username, password, num):
         url = 'http://api.tjise.edudot.cn/api/v1/Motions/GetSignInState?'
         time.sleep(2)
         response = requests.get(url=url, headers=headers)
-        logger.info(threading.current_thread().getName() + ':跑步' + response.json().get("data").get("failReason"))
+        logger.info(threading.current_thread().getName() + ':开始跑步' + response.json().get("data").get("failReason"))
 
     # 线程休眠十分钟，模拟用户跑步
     time.sleep(600)
 
-    headers = init.get_location(stop_latitude, stop_longitude, token)
+    headers = init.get_location(stop_latitude, stop_longitude, token, num)
     # 处理结束跑步请求可能的异常
     try:
         requests.post(url=url, data=json.dumps(params2), headers=headers)
@@ -79,10 +79,9 @@ def run(username, password, num):
         logger.exception('stop run error')
     else:
         url = 'http://api.tjise.edudot.cn/api/v1/Motions/GetSignInState?'
-        # del headers['Content-Length']
         time.sleep(2)
         response = requests.get(url=url, headers=headers)
-        logger.info(threading.current_thread().getName() + ':跑步' + response.json().get("data").get("failReason"))
+        logger.info(threading.current_thread().getName() + ':结束跑步' + response.json().get("data").get("failReason"))
 
 
 if __name__ == '__main__':
