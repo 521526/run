@@ -23,9 +23,9 @@ def get_log():
     logger.setLevel(logging.INFO)
 
     # 确保日志打印一次
-    if not logger.handlers:
-        logger.addHandler(file_handler)
-        logger.addHandler(console_handler)
+    # if not logger.handlers:
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
     return logger
 
 

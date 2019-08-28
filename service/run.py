@@ -71,6 +71,8 @@ def run(username, password, num):
     # 线程休眠十分钟，模拟用户跑步
     time.sleep(600)
 
+    # 结束跑步
+    url = "http://api.tjise.edudot.cn/api/v1/Motions/ClockIn"
     headers = init.get_location(stop_latitude, stop_longitude, token, num)
     # 处理结束跑步请求可能的异常
     try:
@@ -94,7 +96,7 @@ if __name__ == '__main__':
     threading.Thread(target=run, args=(18222043061, "Tjise@0233", 2), name='杨恒').start()
     threading.Thread(target=run, args=(13072261182, "960307", 3), name='王雯').start()
     threading.Thread(target=run, args=(13752667961, "Tjise@3340", 4), name='张研').start()
-    # threading.Thread(target=run, args=(13207625187, "Tjise@001X"), name='秦鸣林').start()
+    threading.Thread(target=run, args=(13207625187, "Tjise@001X", 3), name='秦鸣林').start()
     threading.Thread(target=run, args=(17695490892, "Tjise@0424", 5), name='刘子靖').start()
     threading.Thread(target=run, args=(15160028860, "a123456", 6), name='王勃阳').start()
     # threading.Thread(target=run, args=(18980712647, "Tjise@6712"), name='邓桥阳').start()
