@@ -101,13 +101,4 @@ if __name__ == '__main__':
     # 日志分割线
     logger.info('----------' + time.strftime('%Y.%m.%d %H:%M:%S', time.localtime(time.time())) + '----------')
     # 使用多线程来提高效率和防止一个人出问题其他没法成功
-    threading.Thread(target=run, args=(13702059309, "Tjise@0033"), name='王强').start()
-    # threading.Thread(target=run, args=(13102263173, "168668"), name='王娇').start()
-    # threading.Thread(target=run, args=(17695538053, "Tjise@121X"), name='韩思远').start()
-    # threading.Thread(target=run, args=(18222043061, "Tjise@0233"), name='杨恒').start()
-    # threading.Thread(target=run, args=(13072261182, "960307"), name='王雯').start()
-    # threading.Thread(target=run, args=(13752667961, "Tjise@3340"), name='张研').start()
-    # threading.Thread(target=run, args=(13207625187, "Tjise@001X"), name='秦鸣林').start()
-    # threading.Thread(target=run, args=(17695490892, "Tjise@0424"), name='刘子靖').start()
-    # threading.Thread(target=run, args=(15160028860, "a123456"), name='王勃阳').start()
-    # threading.Thread(target=run, args=(18980712647, "Tjise@6712"), name='邓桥阳').start()
+    threading.Thread(target=run, args=(13702059309, ""), name='王强').start()
