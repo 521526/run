@@ -9,7 +9,7 @@ from requests import RequestException
 
 from util import init
 
-# # 在 centos 下解决中文不能读取错误
+# 在 centos 下解决中文不能读取错误
 # import sys
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
@@ -18,7 +18,7 @@ logger = init.get_log()
 lock = threading.RLock()
 
 
-def run(username, password):
+def run(username, password, num):
     # 加线程锁 保证每人登录时不会同时获取
     lock.acquire()
     token = 'Bearer ' + init.get_token(username, password)
@@ -35,10 +35,14 @@ def run(username, password):
     # 结束经纬度
     stop_latitude = round(random.uniform(39.062292, 39.06293), 6)
     stop_longitude = round(random.uniform(117.111371, 117.111913), 6)
-
-    # 根据谷歌api来获取地址
-    start_address = init.get_address(start_latitude, start_longitude)
-    stop_address = init.get_address(stop_latitude, stop_longitude)
+    # run起始结束位置
+    start_addresses = ('天津市西青区工西路18号靠近天津工业大学公寓', '天津市西青区工西路18号靠近天津工业大学新校区',
+                       '天津市西青区泮缘道18号靠近天津工业大学新校区', '天津市西青区S6津沧高速18号靠近天津工业大学公寓',
+                       '天津市西青区工西路18号靠近天津大学软件学院学术交流中心', '天津市西青区西环路18号靠近天津市大学软件学院')
+    stop_addresses = ('天津市西青区镜缘道20号靠近天津工业大学图书馆', '天津市西青区西环路18号靠近天津工业大学外国语学院',
+                      '天津市西青区西环西路18号靠近天津工业大学新校区经济学院', '天津市西青区西环路18号靠近天津工业大学新校区经济学院')
+    start_address = random.choice(start_addresses)
+    stop_address = random.choice(stop_addresses)
     params1 = {
         'address': start_address,
         'latitude': start_latitude,
@@ -51,63 +55,48 @@ def run(username, password):
         'longitude': stop_longitude,
         'status': 1
     }
-    headers = {
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'Accept': '*/*',
-        'Accept-Encoding': 'gzip, deflate',
-        'Accept-Language': 'zh-CN,en-US;q=0.8',
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 9.0; ONEPLUS A6000 Build/PKQ1.180716.001; wv) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 '
-                      'Chrome/57.0.2987.132 MQQBrowser/6.2 TBS/044306 Mobile '
-                      'Safari/537.36; Edudot',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'credentials': 'include',
-        'Referer': 'http://clock.tjise.edudot.cn/',
-        'Authorization': token,
-        'Origin': 'http://clock.tjise.edudot.cn',
-        'Connection': 'keep-alive',
-        'Host': 'api.tjise.edudot.cn'
-    }
-
+    headers = init.get_location(start_latitude, start_longitude, token, num)
     # 处理开始跑步请求可能的异常
     try:
-        start_response = requests.post(url=url, data=json.dumps(params1), headers=headers)
+        requests.post(url=url, data=json.dumps(params1), headers=headers)
     except RequestException:
         logger.exception("start run error")
     else:
-        if (start_response.json().get("code") == 200) & (start_response.json().get("data").get("status")):
-            logger.info(threading.current_thread().getName() + '晨跑开始!')
-        else:
-            logger.info(threading.current_thread().getName() + start_response.json().get("data").get("msg"))
+        pass
+        url = 'http://api.tjise.edudot.cn/api/v1/Motions/GetSignInState?'
+        time.sleep(2)
+        response = requests.get(url=url, headers=headers)
+        logger.info(threading.current_thread().getName() + ':开始跑步' + response.json().get("data").get("failReason"))
 
     # 线程休眠十分钟，模拟用户跑步
     time.sleep(600)
 
+    # 结束跑步
+    url = "http://api.tjise.edudot.cn/api/v1/Motions/ClockIn"
+    headers = init.get_location(stop_latitude, stop_longitude, token, num)
     # 处理结束跑步请求可能的异常
     try:
-        stop_response = requests.post(url=url, data=json.dumps(params2), headers=headers)
+        requests.post(url=url, data=json.dumps(params2), headers=headers)
     except RequestException:
         logger.exception('stop run error')
     else:
-        if (stop_response.json().get("code") == 200) & (stop_response.json().get("data").get("status")):
-            logger.info(threading.current_thread().getName() + '晨跑结束!')
-        else:
-            logger.info(threading.current_thread().getName() + stop_response.json().get("data").get("msg"))
+        url = 'http://api.tjise.edudot.cn/api/v1/Motions/GetSignInState?'
+        time.sleep(2)
+        response = requests.get(url=url, headers=headers)
+        logger.info(threading.current_thread().getName() + ':结束跑步' + response.json().get("data").get("failReason"))
 
 
 if __name__ == '__main__':
     # 日志分割线
     logger.info('----------' + time.strftime('%Y.%m.%d %H:%M:%S', time.localtime(time.time())) + '----------')
     # 使用多线程来提高效率和防止一个人出问题其他没法成功
-    threading.Thread(target=run, args=(13702059309, "Tjise@0033"), name='王强').start()
-    threading.Thread(target=run, args=(13102263173, "168668"), name='王娇').start()
-    threading.Thread(target=run, args=(17695538053, "Tjise@121X"), name='韩思远').start()
-    threading.Thread(target=run, args=(18222043061, "Tjise@0233"), name='杨恒').start()
-    threading.Thread(target=run, args=(13072261182, "960307"), name='王雯').start()
-    threading.Thread(target=run, args=(13752667961, "Tjise@3340"), name='张研').start()
-    threading.Thread(target=run, args=(13207625187, "Tjise@001X"), name='秦鸣林').start()
-    threading.Thread(target=run, args=(17695490892, "Tjise@0424"), name='刘子靖').start()
-    threading.Thread(target=run, args=(15160028860, "a123456"), name='王勃阳').start()
-    threading.Thread(target=run, args=(18980712647, "Tjise@6712"), name='邓桥阳').start()
+    threading.Thread(target=run, args=(13702059309, "Tjise@0033", 0), name='王强').start()
+    # threading.Thread(target=run, args=(13102263173, "168668"), name='王娇').start()
+    threading.Thread(target=run, args=(17695538053, "Tjise@121X", 1), name='韩思远').start()
+    threading.Thread(target=run, args=(18222043061, "Tjise@0233", 2), name='杨恒').start()
+    threading.Thread(target=run, args=(13072261182, "960307", 3), name='王雯').start()
+    threading.Thread(target=run, args=(13752667961, "Tjise@3340", 4), name='张研').start()
+    threading.Thread(target=run, args=(13207625187, "Tjise@001X", 3), name='秦鸣林').start()
+    threading.Thread(target=run, args=(17695490892, "Tjise@0424", 5), name='刘子靖').start()
+    threading.Thread(target=run, args=(15160028860, "a123456", 6), name='王勃阳').start()
+    # threading.Thread(target=run, args=(18980712647, "Tjise@6712"), name='邓桥阳').start()
