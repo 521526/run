@@ -11,6 +11,9 @@ from util import init
 # import sys
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
+import sys
+# 上级目录导入到python搜索目录
+sys.path.append('..')
 
 logger = init.get_log()
 lock = threading.RLock()

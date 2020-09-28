@@ -13,6 +13,9 @@ from util import init
 # import sys
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
+import sys
+# 上级目录导入到python搜索目录
+sys.path.append('..')
 
 logger = init.get_log()
 lock = threading.RLock()
@@ -93,3 +96,4 @@ if __name__ == '__main__':
     logger.info('----------' + time.strftime('%Y.%m.%d %H:%M:%S', time.localtime(time.time())) + '----------')
     # 使用多线程来提高效率和防止一个人出问题其他没法成功
     threading.Thread(target=run, args=(13702059309, ""), name='王强').start()
+
