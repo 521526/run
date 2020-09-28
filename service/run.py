@@ -18,7 +18,7 @@ logger = init.get_log()
 lock = threading.RLock()
 
 
-def run(username, password, num):
+def run(username, password):
     # 加线程锁 保证每人登录时不会同时获取
     lock.acquire()
     token = 'Bearer ' + init.get_token(username, password)
@@ -55,6 +55,8 @@ def run(username, password, num):
         'longitude': stop_longitude,
         'status': 1
     }
+    # 0-8随机数来取头数据
+    num = random.randint(0, 7)
     headers = init.get_location(start_latitude, start_longitude, token, num)
     # 处理开始跑步请求可能的异常
     try:
@@ -90,4 +92,4 @@ if __name__ == '__main__':
     # 日志分割线
     logger.info('----------' + time.strftime('%Y.%m.%d %H:%M:%S', time.localtime(time.time())) + '----------')
     # 使用多线程来提高效率和防止一个人出问题其他没法成功
-    threading.Thread(target=run, args=(13702059309, "", 0), name='王强').start()
+    threading.Thread(target=run, args=(13702059309, ""), name='王强').start()

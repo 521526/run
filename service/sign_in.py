@@ -16,7 +16,7 @@ logger = init.get_log()
 lock = threading.RLock()
 
 
-def sign_in(username, password, num):
+def sign_in(username, password):
     # 加线程锁 保证每人登录时不会同时获取
     lock.acquire()
     token = 'Bearer ' + init.get_token(username, password)
@@ -43,6 +43,8 @@ def sign_in(username, password, num):
         'latitude': latitude,
         'longitude': longitude,
     }
+    # 0-8随机数来取头数据
+    num = random.randint(0, 7)
     # 模拟获取地址
     headers = init.get_location(latitude, longitude, token, num)
     try:
