@@ -8,11 +8,11 @@ def gettoken():
     url = "http://api.edudot.cn/usercenter/connect/token"
 
     params = {
-        'password': 'Tjise@1016',
+        'password': '123456',
         'grant_type': 'password',
         'login_type': '',
         'client_id': 'DDE1F5ACAF194674B13167269861FB7D',
-        'username': 17695959564
+        'username': 15022789263
     }
 
     headers = {
